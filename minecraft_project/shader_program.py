@@ -9,16 +9,22 @@ class ShaderProgram:
         self.player = app.player
         
         #-----------------------------shaders-----------------------------#
-        self.quad = self.get_program(shader_name='quad' )
-        
+        # for quad
+        #self.quad = self.get_program(shader_name='quad' )
+        self.chunk = self.get_program(shader_name='chunk' )
         #-----------------------------------------------------------------#
         self.set_uniform_on_init()
         
     def set_uniform_on_init(self):
-        self.quad['m_proj'].write(self.player.m_proj)
-        self.quad['m_model'].write(glm.mat4())
+        #for quad
+        #self.quad['m_proj'].write(self.player.m_proj)
+        #self.quad['m_model'].write(glm.mat4())
+        self.chunk['m_proj'].write(self.player.m_proj)
+        self.chunk['m_model'].write(glm.mat4())
     def update(self):
-        self.quad['m_view'].write(self.player.m_view)
+        #for quad
+        #self.quad['m_view'].write(self.player.m_view)
+        self.chunk['m_view'].write(self.player.m_view)
         
         
     def get_program(self,shader_name):
