@@ -2,9 +2,12 @@ from settings import *
 import moderngl as mgl
 import pygame as pg
 import sys
-
+from shader_program import ShaderProgram
+from scene import Scene
+from player import Player
 class VoxelEngine():
     def __init__(self):
+        #----- app init --------------------------------#
         pg.init()
         pg.display.gl_set_attribute(pg.GL_CONTEXT_MAJOR_VERSION, 3)
         pg.display.gl_set_attribute(pg.GL_CONTEXT_MINOR_VERSION, 3)
@@ -20,17 +23,40 @@ class VoxelEngine():
         self.delta_time = 0.0 
         self.time = 0.0
         
-        self.is_running = True
         
+        #---- pygame settings --------------------------------#
+        pg.event.set_grab(True)
+        pg.mouse.set_visible(False)
+        
+        self.is_running = True
+        #---- shader initialization --------------------------------#
+        self.on_init()
+        
+    def on_init(self):
+        self.player = Player(self)
+        self.shader_program = ShaderProgram(self) 
+        self.scene = Scene(self)
         
     def update(self):
+        #------ player update --------------------------------#
+        self.player.update()
+        #------ shader update --------------------------------#
+        self.shader_program.update()
+        #------ scene update --------------------------------#
+        self.scene.update()
+        #-------app update --------------------------------#
         self.delta_time = self.clock.tick()
         self.time = pg.time.get_ticks()*0.001
         pg.display.set_caption(f'{self.clock.get_fps() :.2f}')
         
         
     def render(self):
+        #----- app render --------------------------------#
         self.ctx.clear(color=BG_Color)
+        #----- scene render --------------------------------#
+        self.scene.render()
+        #----- shader render --------------------------------#
+        #self.shader_program.render()
         pg.display.flip()
         
     def handle_event(self):
