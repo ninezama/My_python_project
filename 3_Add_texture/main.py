@@ -81,8 +81,9 @@ class App:
 
         self.triangle = Triangle()
         self.shader = create_shader(
-            vertex_filepath = "shader\\vertex.txt", 
-            fragment_filepath = "shader\\fragment.txt")
+            vertex_filepath = "shaders\\vertex.txt", 
+            fragment_filepath = "shaders\\fragment.txt")
+        self.wood_texture = Material("textures\\wood.jpeg")
     
     def run(self) -> None:
         """ Run the app """
@@ -109,6 +110,7 @@ class App:
         """ cleanup the app, run exit code """
 
         self.triangle.destroy()
+        self.wood_texture.destroy()
         glDeleteProgram(self.shader)
         pg.quit()
 
@@ -123,11 +125,13 @@ class Triangle:
             Initialize a triangle.
         """
         
-        # x, y, z, r, g, b
+        # x, y, z, r, g, b s ,t 
+        # x,y,z start with 0.0 at center of screen that scale by -1 to 1 from each side to each side
+        # s,t reference to width and height scale from 0 to 1 (0,0) at top left corner
         vertices = (
-            -0.5, -0.5, 0.0, 1.0, 0.0, 0.0,
-             0.5, -0.5, 0.0, 0.0, 1.0, 0.0,
-             0.0,  0.5, 0.0, 0.0, 0.0, 1.0
+            -0.5, -0.5, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0,
+             0.1, -0.5, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0,
+             0.0,  0.5, 0.0, 0.0, 0.0, 1.0, 0.5, 0.0 
         )
         vertices = np.array(vertices, dtype=np.float32)
 
@@ -140,10 +144,13 @@ class Triangle:
         glBufferData(GL_ARRAY_BUFFER, vertices.nbytes, vertices, GL_STATIC_DRAW)
 
         glEnableVertexAttribArray(0)
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 24, ctypes.c_void_p(0))
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 32, ctypes.c_void_p(0))
         
         glEnableVertexAttribArray(1)
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 24, ctypes.c_void_p(12))
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 32, ctypes.c_void_p(12))
+        
+        glEnableVertexAttribArray(2)
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 32, ctypes.c_void_p(24))
     
     def arm_for_drawing(self) -> None:
         """
@@ -166,6 +173,27 @@ class Triangle:
         glDeleteVertexArrays(1,(self.vao,))
         glDeleteBuffers(1,(self.vbo,))
 
+class Material:
+    def __init__(self,filepath):
+        self.texture = glGenTextures(1)
+        glBindTexture(GL_TEXTURE_2D, self.texture) 
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+        filepath = os.path.dirname(os.path.abspath(__file__))+ "\\"+ filepath
+        image = pg.image.load(filepath).convert_alpha()
+        image_width, image_height = image.get_rect().size
+        image_data = pg.image.tostring(image,"RGBA")
+        glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA, image_width, image_height, 0 , GL_RGBA, GL_UNSIGNED_BYTE, image_data)
+        glGenerateMipmap(GL_TEXTURE_2D)
+    
+    def use(self):
+        glActiveTexture(GL_TEXTURE0)
+        glBindTexture(GL_TEXTURE_2D, self.texture)
+    def destroy(self):
+        glDeleteTextures(1,self.texture)
+        
 if __name__ == "__main__":
 
     my_app = App()
