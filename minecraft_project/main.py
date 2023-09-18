@@ -23,7 +23,7 @@ class VoxelEngine():
         self.delta_time = 0.0 
         self.time = 0.0
         
-        123
+        
         #---- pygame settings --------------------------------#
         pg.event.set_grab(True)
         pg.mouse.set_visible(False)
