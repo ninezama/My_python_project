@@ -49,7 +49,7 @@ class VoxelEngine():
         self.time = pg.time.get_ticks()*0.001
         pg.display.set_caption(f'{self.clock.get_fps() :.2f}')
         
-        
+        123
     def render(self):
         #----- app render --------------------------------#
         self.ctx.clear(color=BG_Color)
