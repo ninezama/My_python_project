@@ -11,7 +11,6 @@ class ChunkMesh(BaseMesh):
         #3 unsigned byte , 1 unsigned byte , 1 unsigned byte 
         self.vbo_format = '3u1 1u1 1u1'
         self.format_size = sum(int(fmt[:1]) for fmt in self.vbo_format.split())
-        print(f'format_size {self.format_size}')
         self.attrs = ('in_position', 'voxel_id', 'face_id')
         self.vao = self.get_vao()
         

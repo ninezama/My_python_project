@@ -20,7 +20,7 @@ def build_chunk_mesh(chunk_voxels, format_size):
     # NUM_VOXELS_VERTICLES is the number of possible to see voxels of rectangle and it's 18
     # VERTEXS_ATTRS the vertex attributes include of x,y,z,voxels_id and face_id 5 attrs of choose format_size
     vertex_data = np.empty(CHUNK_VOL*18*format_size, dtype='uint8')    
-    
+     
     
     index = 0
     for x in range(CHUNK_SIZE):
