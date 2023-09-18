@@ -1,15 +1,15 @@
 from settings import *
 from meshes.quad_mesh import QuadMesh
-from world_objects.chunk import Chunk
+from world import World
 class Scene:
     def __init__(self, app):
         self.app = app
         # scene of QuadMesh 
         #self.quad = QuadMesh(self.app) 
-        self.chunk = Chunk(self.app)
+        self.world = World(self.app)
     def update(self):
-        pass
+        self.world.update()
     def render(self):
         # scene of QuadMesh
         #self.quad.render()
-        self.chunk.render()    
+        self.world.render()    

@@ -18,6 +18,7 @@ class VoxelEngine():
         pg.display.gl_set_attribute(pg.GL_DEPTH_SIZE,24)
         
         pg.display.set_mode(WIN_RES ,flags=pg.OPENGL | pg.DOUBLEBUF)
+        
         self.ctx = mgl.create_context()
         self.ctx.enable(flags=mgl.DEPTH_TEST | mgl.CULL_FACE | mgl.BLEND)
         self.ctx.gc_mode = 'auto'
